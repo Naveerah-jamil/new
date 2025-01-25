@@ -1,60 +1,90 @@
-"use client";
+import React from 'react';
+import Image from 'next/image';
+import { CiShoppingCart } from 'react-icons/ci';
+import Link from 'next/link';
 
-import { useEffect, useState } from "react";
+const products = [
+  [
+    { src: '/assets/Image.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image copy.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image3.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image4.png', name: 'Library stool chair', price: '$20' },
+  ],
+  [
+    { src: '/assets/Image.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image copy.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image3.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image4.png', name: 'Library stool chair', price: '$20' },
+  ],
+  [
+    { src: '/assets/Image.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image copy.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image3.png', name: 'Library stool chair', price: '$20' },
+    { src: '/assets/Image4.png', name: 'Library stool chair', price: '$20' },
+  ],
+];
 
-// Define Product Interface (TypeScript)
-interface Product {
-  _id: string;
-  title: string;
-  slug: string;
-  price: number;
-  imageUrl: string;
-  description: string;
-  tags: string[];
-  isNew: boolean;
-  isSale: boolean;
-}
+const ProductList = ({ products}: any) => (
+  <div className="w-full flex flex-wrap justify-center gap-6">
+    {products.map((product:any, index: any) => (
+      <div key={index} className="w-[312px] h-[377px] rounded-[6px]">
+        <Link href="/">
+          <Image
+            src={product.src}
+            alt="Product Image"
+            width={312}
+            height={312}
+            className="rounded-[6px]"
+          />
+          <div className="text-green-400 flex justify-between items-center mt-2">
+            {product.name}
+            <div
+              className={`${
+                index === 0 ? 'bg-[#029FAE]' : 'bg-[#F0F2F3]'
+              } flex justify-center items-center rounded-[6px] w-[44px] h-[44px]`}
+            >
+              <CiShoppingCart className="text-black w-[18.5px] h-[18.5px]" />
+            </div>
+          </div>
+          <p className="font-bold text-black">{product.price}</p>
+        </Link>
+      </div>
+    ))}
+  </div>
+);
 
-// Client Component
-export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/products?category=Electronics&start=0&limit=5");
-        const data = await res.json();
-        setProducts(data.products);
-        setTotalCount(data.totalCount);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-
-  return (
-    <div>
-      <h1>Total Products: {totalCount}</h1>
-      <ul>
-        {products.map((product) => (
-          <li key={product._id}>
-            <h2>{product.title}</h2>
-            <p>Price: ${product.price}</p>
-            <img src={product.imageUrl} alt={product.title} width={200} />
-            <p>{product.description}</p>
-            {product.isNew && <span>New</span>}
-            {product.isSale && <span>Sale</span>}
-          </li>
-        ))}
-      </ul>
+const Page = () => (
+  <div className="max-w-screen-xl mx-auto p-4">
+    <h1 className="text-2xl font-bold text-center mb-8">ALL Products</h1>
+    {products.map((productSet, index) => (
+      <div key={index} className="mb-12">
+        <ProductList products={productSet} />
+      </div>
+    ))}
+    <div className="bg-gray-200 py-12 flex flex-col items-center">
+      <h2 className="text-xl font-medium text-center mb-4">
+        Or Subscribe to the Newsletter
+      </h2>
+      <h2 className="text-xl font-medium text-center mb-8">
+        Follow Products and Discounts on Instagram
+      </h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+        {Array(6)
+          .fill('')
+          .map((_, index) => (
+            <div key={index} className="w-[200px] h-[200px] rounded-[6px]">
+              <Image
+                src="/image1.png"
+                alt={`Instagram Product ${index + 1}`}
+                width={200}
+                height={200}
+                className="object-cover rounded-[6px]"
+              />
+            </div>
+          ))}
+      </div>
     </div>
-  );
-}
+  </div>
+);
+
+export default Page;
